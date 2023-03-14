@@ -29,5 +29,5 @@ jobs:
       # original repo forcedotcom/salesforcedx-actions@master
       uses: marcelblijleven/salesforcedx-actions@master
       with:
-        args: 'force:source:deploy -c -l RunLocalTests -p ''"${{ env.files_to_deploy }}"'' -u ${{ secrets.SFDC_STAG_USERNAME }}'
+        args: 'force:source:deploy -c -l RunLocalTests -p ''"${{ env.files_to_deploy }}"'' -u ${{ secrets.SFDX_AUTH_USERNAME }}'
     - run: $([ $? -eq 0 ]  || exit 1)
