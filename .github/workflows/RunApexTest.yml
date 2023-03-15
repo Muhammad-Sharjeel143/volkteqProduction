@@ -24,7 +24,7 @@ jobs:
       # original repo forcedotcom/salesforcedx-actions@master
       uses: marcelblijleven/salesforcedx-actions@master
       with:
-        args: force:auth:sfdxurl:store --sfdx-url-file=./SFDX_TESTPRODUC_AUTH_URL.txt --alias=staging
+        args: force:auth:sfdxurl:store --sfdx-url-file=./SFDX_TESTPRODUC_AUTH_URL.txt --alias=develop
     - name: deploy_files
       # original repo forcedotcom/salesforcedx-actions@master
       uses: marcelblijleven/salesforcedx-actions@master
