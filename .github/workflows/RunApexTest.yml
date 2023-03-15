@@ -30,4 +30,4 @@ jobs:
       uses: marcelblijleven/salesforcedx-actions@master
       with:
         args: force:source:deploy -p force-app -u ${{ secrets.SFDC_STAG_USERNAME }} -l RunLocalTests
-        - run: $([ $? -eq 0 ]  || exit 1)
+    - run: $([ $? -eq 0 ]  || exit 1)
