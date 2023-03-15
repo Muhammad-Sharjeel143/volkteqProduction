@@ -2,7 +2,7 @@
 name: Run Apex Test and deploy to Staging
 on:
   pull_request:
-    branches: [develop]
+    branches: [Develop]
     
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
