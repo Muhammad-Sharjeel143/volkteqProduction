@@ -18,13 +18,13 @@ jobs:
     - name: prepare_deploy_data
       shell: bash
       run: |
-        echo ${{ secrets.SFDX_STAGING_AUTH_URL }} > ./SFDX_STAGING_AUTH_URL.txt
+        echo ${{ secrets.SFDX_TESTPRODUC_AUTH_URL }} > ./SFDX_TESTPRODUC_AUTH_URL.txt
         echo "files_to_deploy=$(git --no-pager diff --name-only --diff-filter=d origin/${{ github.base_ref }} -- force-app | tr '\n' ',' | sed 's/,/, /g' | sed 's/\(.*\),/\1 /')" >> $GITHUB_ENV
     - name: authenticate_to_production
       # original repo forcedotcom/salesforcedx-actions@master
       uses: marcelblijleven/salesforcedx-actions@master
       with:
-        args: force:auth:sfdxurl:store --sfdx-url-file=./SFDX_STAGING_AUTH_URL.txt --alias=develop
+        args: force:auth:sfdxurl:store --sfdx-url-file=./SFDX_TESTPRODUC_AUTH_URL.txt --alias=develop
     - name: deploy_files
       # original repo forcedotcom/salesforcedx-actions@master
       uses: marcelblijleven/salesforcedx-actions@master
