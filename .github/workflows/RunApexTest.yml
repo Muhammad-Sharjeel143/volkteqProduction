@@ -1,26 +1,29 @@
 name: Run Apex Test and deploy to Staging
 on:
   pull_request:
-    branches: [develop]
-
+    branches: [Develop]
+    
 jobs:
   deploy_to_production:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - run: |
-          git fetch --prune --unshallow
-      - name: prepare_deploy_data
-        shell: bash
-        run: |
-          echo ${{ secrets.SFDC_STAG_AUTH_URL }} > ./SFDC_STAG_AUTH_URL.txt
-          echo "files_to_deploy=$(git --no-pager diff --name-only --diff-filter=d origin/${{ github.base_ref }} -- force-app | tr '\n' ',' | sed 's/,/, /g' | sed 's/\(.*\),/\1 /')" >> $GITHUB_ENV
-      - name: authenticate_to_production
-        uses: marcelblijleven/salesforcedx-actions@master
-        with:
-          args: force:auth:sfdxurl:store --sfdx-url-file=./SFDC_STAG_AUTH_URL.txt --alias=staging
-      - name: deploy_files
-        uses: marcelblijleven/salesforcedx-actions@master
-        with:
-          args: 'force:source:deploy -c -l RunLocalTests -p "${{ env.files_to_deploy }}" -u ${{ secrets.SFDC_STAG_USERNAME }}'
-      - run: $([ $? -eq 0 ]  || exit 1)
+    - uses: actions/checkout@v2
+    - run: git fetch --prune --unshallow
+    - name: prepare_deploy_data
+      shell: bash
+      run: |
+        echo "${{ secrets.SFDX_TESTPRODUC_AUTH_URL }}" > SFDX_TESTPRODUC_AUTH_URL.txt
+        echo "FILES_TO_DEPLOY=$(git --no-pager diff --name-only --diff-filter=d origin/${{ github.base_ref }} -- force-app | tr '\n' ',' | sed 's/,/, /g' | sed 's/\(.*\),/\1 /')" >> $GITHUB_ENV
+    - name: authenticate_to_production
+      uses: sfdx-actions/auth@v1
+      with:
+        sfdx_auth_url: "${{ secrets.SFDX_TESTPRODUC_AUTH_URL }}"
+        alias: staging
+    - name: deploy_files
+      uses: sfdx-actions/deploy@v1
+      with:
+        username: ${{ secrets.SFDX_AUTH_USERNAME }}
+        package: ${{ env.FILES_TO_DEPLOY }}
+        options: -c -l RunLocalTests
+    - name: check_deployment_status
+      run: ${{ job.status }}
